@@ -110,6 +110,11 @@ bool envire::urdf::Robot::frameHas(envire::core::EnvireGraph& graph, FRAME_ITEM_
     return hasItem;
 }
 
+std::vector<envire::core::FrameId>  envire::urdf::Robot::getTransformFrames(envire::core::FrameId &sourceFrame,envire::core::FrameId &targetFrame, envire::core::EnvireGraph &graph)
+{
+    return graph.getPath(sourceFrame, targetFrame);
+}
+
 
 
 
