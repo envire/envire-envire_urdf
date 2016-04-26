@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- created with Phobos 0.6 -->
+  <robot name="spaceclimber">
+
+    <link name="root">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <mass value="112.541"/>
+        <inertia ixx="0.037663" ixy="-6e-06" ixz="-1e-06" iyy="0.015691" iyz="-5e-06" izz="0.035183"/>
+        </inertial>
+      <visual name="visual_root">
+        <origin xyz="0. 0. 0.0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.2 0.2 0.2"/>
+        </geometry>
+        <material name="green"/>
+      </visual>
+      <collision name="collision_root">
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.2 0.2 0.2"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <link name="box">
+      <inertial>
+        <origin xyz="0.9 0.0 0.0" rpy="0 0 0"/>
+        <mass value="1.121"/>
+        <inertia ixx="0.004046" ixy="0.000314" ixz="5.7e-05" iyy="0.002621" iyz="-4.8e-05" izz="0.004502"/>
+      </inertial>
+      <visual name="visual_box">
+        <origin xyz="0.9 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="schwarz"/>
+      </visual>
+      <collision name="collision_box">
+        <origin xyz="0.9 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="root2box" type="fixed">
+      <origin xyz="0.41 0. 0." rpy="0 0 0"/>
+      <parent link="root"/>
+      <child link="box"/>
+      <axis xyz="0.0 1.0 0"/>
+      <limit effort="1000" lower="-0.785398" upper="0.785398" velocity="6.28"/>
+    </joint>
+
+    <material name="green">
+      <color rgba="0.35884 0.343867 0.208525 1.0"/>
+    </material>
+
+    <material name="schwarz">
+      <color rgba="0.00637 0.00637 0.00637 1.0"/>
+    </material>
+
+    <material name="silber">
+      <color rgba="0.422167 0.422167 0.422167 1.0"/>
+    </material>
+
+  </robot>
