@@ -42,14 +42,14 @@ namespace envire
             
             void loadJoints(envire::core::EnvireGraph &graph);
             
-            bool frameHas(envire::core::EnvireGraph &graph,
-                          FRAME_ITEM_TYPE itemType, 
-                          envire::core::FrameId frameID);
+//             bool frameHas(envire::core::EnvireGraph &graph,
+//                           FRAME_ITEM_TYPE itemType, 
+//                           envire::core::FrameId frameID);
             
-            std::vector<envire::core::FrameId> getTransformFrames(
-                envire::core::FrameId &sourceFrame,
-                envire::core::FrameId &targetFrame, 
-                envire::core::EnvireGraph &graph);
+//             std::vector<envire::core::FrameId> getTransformFrames(
+//                 envire::core::FrameId &sourceFrame,
+//                 envire::core::FrameId &targetFrame, 
+//                 envire::core::EnvireGraph &graph);
             
             
         private:
