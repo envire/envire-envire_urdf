@@ -5,7 +5,7 @@
 #include <urdf_parser/urdf_parser.h>
 
 
-// TODO Glossary
+// TODO Documentation
 
 namespace envire
 { 
@@ -19,6 +19,8 @@ namespace envire
         class Robot
         { 
         public:
+            typedef enum {JOINT,LINK} FRAME_ITEM_TYPE;
+            
             Robot(){};
             
             Robot(envire::core::Transform pose):iniPose(pose){};
@@ -42,9 +44,9 @@ namespace envire
             
             void loadJoints(envire::core::EnvireGraph &graph);
             
-//             bool frameHas(envire::core::EnvireGraph &graph,
-//                           FRAME_ITEM_TYPE itemType, 
-//                           envire::core::FrameId frameID);
+            bool frameHas(envire::core::EnvireGraph &graph,
+                          FRAME_ITEM_TYPE itemType, 
+                          envire::core::FrameId frameID);
             
 //             std::vector<envire::core::FrameId> getTransformFrames(
 //                 envire::core::FrameId &sourceFrame,

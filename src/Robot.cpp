@@ -81,5 +81,35 @@ void envire::urdf::Robot::loadJoints(envire::core::EnvireGraph& graph)
     }    
 }
 
+bool envire::urdf::Robot::frameHas(envire::core::EnvireGraph& graph, FRAME_ITEM_TYPE itemType, envire::core::FrameId frameID)
+{
+    bool hasItem=false;
+    switch (itemType)
+    {
+        case JOINT:
+        {
+            envire::core::EnvireGraph::ItemIterator<envire::core::Item<::urdf::Joint*>> begin, end;
+            tie(begin, end) = graph.getItems<envire::core::Item<::urdf::Joint*>>(frameID);
+            if(begin!=end)
+                hasItem=true;
+            break;
+        }
+
+        case LINK:
+        {
+            envire::core::EnvireGraph::ItemIterator<envire::core::Item<::urdf::Link *>> begin, end;
+            tie(begin, end) = graph.getItems<envire::core::Item<::urdf::Link *>>(frameID);
+            if(begin!=end)
+                hasItem=true;
+            break;
+        }
+
+
+    }
+
+    return hasItem;
+}
+
+
 
 
