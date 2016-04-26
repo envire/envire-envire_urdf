@@ -46,10 +46,10 @@ namespace envire
                           FRAME_ITEM_TYPE itemType, 
                           envire::core::FrameId frameID);
             
-//             std::vector<envire::core::FrameId> getTransformFrames(
-//                 envire::core::FrameId &sourceFrame,
-//                 envire::core::FrameId &targetFrame, 
-//                 envire::core::EnvireGraph &graph);
+            std::vector<envire::core::FrameId> getTransformFrames(
+                envire::core::FrameId &sourceFrame,
+                envire::core::FrameId &targetFrame, 
+                envire::core::EnvireGraph &graph);
             
             
         private:
