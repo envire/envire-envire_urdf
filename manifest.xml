@@ -8,6 +8,7 @@
   <logo>http://</logo>
   <depend package="base/cmake" />
   <depend package="envire/envire_core" />
+  <depend package="envire/envire_urdf" />
   <depend package="control/urdfdom" />
-  <depens package="simulation/mars/interfaces" />
+
 </package>
