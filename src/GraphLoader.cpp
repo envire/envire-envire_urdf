@@ -10,6 +10,7 @@ void envire::urdf::GraphLoader::loadStructure(boost::shared_ptr<::urdf::ModelInt
     initialized = true;
     initFrames(urdfModel);
     initTfs(urdfModel);
+    iniPose = envire::core::Transform(base::Position(0, 0, 0), Eigen::Quaterniond::Identity());
 }
     
 void envire::urdf::GraphLoader::loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, boost::shared_ptr<::urdf::ModelInterface> urdfModel)
