@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(it_should_not_crash_when_created)
 BOOST_AUTO_TEST_CASE(initRobotGraph_noPos)
 {
     std::shared_ptr<envire::core::EnvireGraph>  transformGraph( new envire::core::EnvireGraph());
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(path);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(path).get();
     envire::core::GraphViz viz;
     envire::urdf::GraphLoader loader(transformGraph);
     loader.loadStructure(robot);
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(initRobotGraph_noPos)
 BOOST_AUTO_TEST_CASE(initRobotGraph_withPos)
 {
     std::shared_ptr<envire::core::EnvireGraph>  transformGraph( new envire::core::EnvireGraph());
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(path);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(path).get();
     envire::core::GraphViz viz;
     std::cout << "Path to robot model " << path << std::endl;
     envire::core::Transform iniPose;
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(initRobotGraph_withPos)
 BOOST_AUTO_TEST_CASE(initRobotGraph_withDynamicJoint)
 {   
     std::shared_ptr<envire::core::EnvireGraph>  transformGraph( new envire::core::EnvireGraph());
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(pathDynamic);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(pathDynamic).get();
     envire::core::GraphViz viz;
     std::cout << "Path to robot model " << pathDynamic << std::endl;
     envire::core::Transform iniPose;
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(initRobotGraph_withDynamicJoint)
     viz.write(*transformGraph, "initRobotGraph_withDynamicJoint_test.dot");
 }
 
-envire::urdf::GraphLoader getRobotWithInitGraph(boost::shared_ptr<urdf::ModelInterface> robot)
+envire::urdf::GraphLoader getRobotWithInitGraph(urdf::ModelInterface& robot)
 {
     std::shared_ptr<envire::core::EnvireGraph> transformGraph( new envire::core::EnvireGraph());
     envire::core::Transform iniPose;
@@ -73,7 +73,7 @@ envire::urdf::GraphLoader getRobotWithInitGraph(boost::shared_ptr<urdf::ModelInt
 BOOST_AUTO_TEST_CASE(loadFrames)
 {
     
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(pathDynamic);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(pathDynamic);
     envire::core::GraphViz viz;
     envire::urdf::GraphLoader loader = getRobotWithInitGraph(robot);
     loader.loadFrames(robot);
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(loadFrames)
 
 BOOST_AUTO_TEST_CASE(loadFrames_withDynamicJoint)
 {
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(pathDynamic);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(pathDynamic);
     envire::core::GraphViz viz;
     envire::urdf::GraphLoader loader = getRobotWithInitGraph(robot);
     loader.loadFrames(robot);
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(loadFrames_withDynamicJoint)
 
 BOOST_AUTO_TEST_CASE(loadJoints)
 {
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(pathDynamic);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(pathDynamic);
     envire::core::GraphViz viz;
     envire::urdf::GraphLoader loader = getRobotWithInitGraph(robot);
     loader.loadJoints(robot);
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(loadJoints)
 
 BOOST_AUTO_TEST_CASE(completeTest)
 {
-    boost::shared_ptr<urdf::ModelInterface> robot = urdf::parseURDFFile(pathDynamic);
+    urdf::ModelInterface robot = *urdf::parseURDFFile(pathDynamic);
     envire::core::GraphViz viz;
     envire::urdf::GraphLoader loader = getRobotWithInitGraph(robot);
     loader.loadFrames(robot);

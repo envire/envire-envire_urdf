@@ -14,13 +14,13 @@ namespace envire {
             
             std::shared_ptr<envire::core::EnvireGraph> getGraph(){return this->graph;};
             
-            virtual void loadStructure(boost::shared_ptr< T > ) = 0;
+            virtual void loadStructure(T& ) = 0;
             
-            virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, boost::shared_ptr< T > ) = 0;
+            virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor , T& ) = 0;
             
-            virtual void loadFrames(boost::shared_ptr< T > ) = 0;
+            virtual void loadFrames(T& ) = 0;
             
-            virtual void loadJoints(boost::shared_ptr< T > ) = 0;
+            virtual void loadJoints(T& ) = 0;
             
         protected:
             std::shared_ptr<envire::core::EnvireGraph> graph;    

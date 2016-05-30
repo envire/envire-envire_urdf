@@ -26,19 +26,19 @@ namespace envire
             GraphLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph, envire::core::Transform pose)
                 : EnvireLoader<::urdf::ModelInterface>(targetGraph, pose) {};
                 
-            virtual void loadStructure(boost::shared_ptr< ::urdf::ModelInterface >);
+            virtual void loadStructure(::urdf::ModelInterface& urdfModel);
             
-            virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, boost::shared_ptr< ::urdf::ModelInterface >);
+            virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, ::urdf::ModelInterface& urdfModel);
             
-            virtual void loadFrames(boost::shared_ptr< ::urdf::ModelInterface >);
+            virtual void loadFrames(::urdf::ModelInterface& urdfModel);
             
-            virtual void loadJoints(boost::shared_ptr< ::urdf::ModelInterface >);
+            virtual void loadJoints(::urdf::ModelInterface& urdfModel);
             
             
         private:            
-            void initFrames(boost::shared_ptr<::urdf::ModelInterface> urdfModel);
+            void initFrames(::urdf::ModelInterface& urdfModel);
             
-            void initTfs(boost::shared_ptr<::urdf::ModelInterface> urdfModel);            
+            void initTfs(::urdf::ModelInterface& urdfModel);            
         };
     }
 }
