@@ -4,8 +4,7 @@
 #include <envire_core/items/Item.hpp>
 #include <envire_core/graph/EnvireGraph.hpp>
 
-
-void envire::urdf::GraphLoader::loadStructure(boost::shared_ptr<::urdf::ModelInterface> urdfModel)
+void envire::urdf::GraphLoader::loadStructure(boost::shared_ptr< ::urdf::ModelInterface > urdfModel)
 {
     initialized = true;
     initFrames(urdfModel);

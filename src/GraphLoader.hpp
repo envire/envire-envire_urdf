@@ -4,6 +4,7 @@
 #include <envire_core/graph/GraphTypes.hpp>
 #include <urdf_parser/urdf_parser.h>
 
+#include "EnvireLoader.hpp"
 
 // TODO Documentation
 
@@ -16,31 +17,25 @@ namespace envire
   
     namespace urdf
     {
-        class GraphLoader
+        class GraphLoader : public envire::core::EnvireLoader< ::urdf::ModelInterface >
         { 
         public:
-            GraphLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph): graph(targetGraph){};
+            GraphLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph)
+                : EnvireLoader<::urdf::ModelInterface>(targetGraph) {};
             
-            GraphLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph, envire::core::Transform pose): graph(targetGraph), iniPose(pose){};
+            GraphLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph, envire::core::Transform pose)
+                : EnvireLoader<::urdf::ModelInterface>(targetGraph, pose) {};
+                
+            virtual void loadStructure(boost::shared_ptr< ::urdf::ModelInterface >);
             
-            std::shared_ptr<envire::core::EnvireGraph> getGraph(){return this->graph;};
+            virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, boost::shared_ptr< ::urdf::ModelInterface >);
             
-            void loadStructure(boost::shared_ptr<::urdf::ModelInterface> urdfModel);
+            virtual void loadFrames(boost::shared_ptr< ::urdf::ModelInterface >);
             
-            void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, boost::shared_ptr<::urdf::ModelInterface> urdfModel);
-            
-            void loadFrames(boost::shared_ptr<::urdf::ModelInterface> urdfModel);
-            
-            void loadJoints(boost::shared_ptr<::urdf::ModelInterface> urdfModel);
+            virtual void loadJoints(boost::shared_ptr< ::urdf::ModelInterface >);
             
             
-        private:
-            std::shared_ptr<envire::core::EnvireGraph> graph;
-            envire::core::Transform iniPose;
-            bool initialized = false;
-            const bool debug = false;
-            bool linksLoaded = false;
-            
+        private:            
             void initFrames(boost::shared_ptr<::urdf::ModelInterface> urdfModel);
             
             void initTfs(boost::shared_ptr<::urdf::ModelInterface> urdfModel);            
