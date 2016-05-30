@@ -4,7 +4,7 @@
 #include <envire_core/items/Item.hpp>
 #include <envire_core/graph/EnvireGraph.hpp>
 
-void envire::urdf::GraphLoader::loadStructure(::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::loadStructure(const ::urdf::ModelInterface& urdfModel)
 {
     initialized = true;
     initFrames(urdfModel);
@@ -12,7 +12,7 @@ void envire::urdf::GraphLoader::loadStructure(::urdf::ModelInterface& urdfModel)
     iniPose = envire::core::Transform(base::Position(0, 0, 0), Eigen::Quaterniond::Identity());
 }
     
-void envire::urdf::GraphLoader::loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, ::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, const ::urdf::ModelInterface& urdfModel)
 {
     if (!initialized)
     {
@@ -23,7 +23,7 @@ void envire::urdf::GraphLoader::loadStructure(envire::core::GraphTraits::vertex_
     graph->addTransform(graph->getFrameId(linkTo), robotRoot, iniPose);
 }
 
-void envire::urdf::GraphLoader::initFrames(::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::initFrames(const ::urdf::ModelInterface& urdfModel)
 {
     for(std::pair<std::string, boost::shared_ptr<::urdf::Link> > frame : urdfModel.links_)
     {
@@ -32,7 +32,7 @@ void envire::urdf::GraphLoader::initFrames(::urdf::ModelInterface& urdfModel)
     
 }
 
-void envire::urdf::GraphLoader::initTfs(::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::initTfs(const ::urdf::ModelInterface& urdfModel)
 {
     for(std::pair<std::string, boost::shared_ptr<::urdf::Joint> > tf : urdfModel.joints_) 
     {
@@ -46,7 +46,7 @@ void envire::urdf::GraphLoader::initTfs(::urdf::ModelInterface& urdfModel)
     }
 }
 
-void envire::urdf::GraphLoader::loadFrames(::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::loadFrames(const ::urdf::ModelInterface& urdfModel)
 {
     if(!initialized)
     {
@@ -62,7 +62,7 @@ void envire::urdf::GraphLoader::loadFrames(::urdf::ModelInterface& urdfModel)
     linksLoaded = true;
 }
 
-void envire::urdf::GraphLoader::loadJoints(::urdf::ModelInterface& urdfModel)
+void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfModel)
 {
     if(!initialized)
     {
