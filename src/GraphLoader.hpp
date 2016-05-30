@@ -30,7 +30,8 @@ namespace envire
             
             virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor linkTo, const ::urdf::ModelInterface& urdfModel);
             
-            virtual void loadFrames(const ::urdf::ModelInterface& urdfModel);
+            virtual void loadFrames(int& nextGroupId, const ::urdf::ModelInterface& urdfModel);
+                    void loadFrames(const ::urdf::ModelInterface& urdfModel);
             
             virtual void loadJoints(const ::urdf::ModelInterface& urdfModel);
             

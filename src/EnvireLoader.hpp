@@ -18,7 +18,7 @@ namespace envire {
             
             virtual void loadStructure(envire::core::GraphTraits::vertex_descriptor , const T& ) = 0;
             
-            virtual void loadFrames(const T& ) = 0;
+            virtual void loadFrames(int& , const T& ) = 0;
             
             virtual void loadJoints(const T& ) = 0;
             
@@ -27,7 +27,7 @@ namespace envire {
             envire::core::Transform iniPose;
             bool initialized = false;
             const bool debug = false;
-            bool linksLoaded = false;
+            bool framesLoaded = false;
         };
     }
 }

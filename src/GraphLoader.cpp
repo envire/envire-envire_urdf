@@ -46,6 +46,11 @@ void envire::urdf::GraphLoader::initTfs(const ::urdf::ModelInterface& urdfModel)
     }
 }
 
+void envire::urdf::GraphLoader::loadFrames(int& nextGroupId, const ::urdf::ModelInterface& urdfModel)
+{
+    loadFrames(urdfModel);
+}
+
 void envire::urdf::GraphLoader::loadFrames(const ::urdf::ModelInterface& urdfModel)
 {
     if(!initialized)
@@ -59,7 +64,7 @@ void envire::urdf::GraphLoader::loadFrames(const ::urdf::ModelInterface& urdfMod
         envire::core::FrameId frameId = frame.second->name;
         graph->addItemToFrame(frameId, link_itemPtr);      
     }
-    linksLoaded = true;
+    framesLoaded = true;
 }
 
 void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfModel)
