@@ -10,5 +10,6 @@
   <depend package="envire/envire_core" />
   <depend package="envire/envire_urdf" />
   <depend package="control/urdfdom" />
+  <depend package="control/urdfdom_headers" />
 
 </package>
