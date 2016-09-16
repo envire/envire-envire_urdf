@@ -12,6 +12,8 @@ namespace envire {
             
             EnvireLoader(const std::shared_ptr<envire::core::EnvireGraph>& targetGraph, envire::core::Transform pose): graph(targetGraph), iniPose(pose){};
             
+            virtual ~EnvireLoader() {};
+
             std::shared_ptr<envire::core::EnvireGraph> getGraph(){return this->graph;};
             
             virtual void loadStructure(const T& ) = 0;
