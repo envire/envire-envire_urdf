@@ -28,6 +28,7 @@ namespace vizkit3d
     private:
         struct Data;
         Data* p;
+        osg::ref_ptr<osg::Group> mainNode;
     };
 }
 #endif
