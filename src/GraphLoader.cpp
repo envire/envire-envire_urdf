@@ -103,7 +103,6 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                 //get envire joint
                 envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
                 tf.transform.orientation = Eigen::Quaterniond(angleaxis);
-                printf("update transform %s to %s\n",joint->parent_link_name.c_str(),joint->child_link_name.c_str());
                 graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
 
                 return true;
