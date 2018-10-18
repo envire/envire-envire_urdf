@@ -85,3 +85,42 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
 
 
 
+
+    bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value)
+    {
+        
+        std::map<std::string, ::urdf::JointSharedPtr>::const_iterator joint_it = urdfModel.joints_.find(jointName);
+        if (joint_it == urdfModel.joints_.end()){
+            printf("Joint %s not found in model\n",jointName.c_str());
+            return false;
+        }
+        ::urdf::JointConstSharedPtr joint = joint_it->second;
+        switch(joint->type){
+            case ::urdf::Joint::REVOLUTE:{
+                Eigen::Vector3d axis (joint->axis.x,joint->axis.y,joint->axis.z);
+                Eigen::AngleAxisd angleaxis (value,axis);
+
+                //get envire joint
+                envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
+                tf.transform.orientation = Eigen::Quaterniond(angleaxis);
+                printf("update transform %s to %s\n",joint->parent_link_name.c_str(),joint->child_link_name.c_str());
+                graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
+
+                return true;
+                }
+            case ::urdf::Joint::UNKNOWN:
+            case ::urdf::Joint::CONTINUOUS:
+            case ::urdf::Joint::PRISMATIC:
+            case ::urdf::Joint::FLOATING:
+            case ::urdf::Joint::PLANAR:
+            case ::urdf::Joint::FIXED: printf("Joint type not supported for setting values\n",jointName.c_str()); return false; break;
+        }
+
+            // Eigen::Affine3d tfPose(Eigen::Affine3d::Identity());
+            // ::urdf::Vector3 pos = tf.second->parent_to_joint_origin_transform.position;
+            // ::urdf::Rotation rot = tf.second->parent_to_joint_origin_transform.rotation;
+            // tfPose.linear() = Eigen::Quaterniond(rot.w, rot.x, rot.y, rot.z).matrix();
+            // tfPose.translation() = Eigen::Vector3d(pos.x, pos.y, pos.z);
+            // envire::core::Transform envireTf(base::Time::now(), base::TransformWithCovariance(tfPose));
+            // graph->addTransform(tf.second->parent_link_name, tf.second->child_link_name, envireTf);
+    }

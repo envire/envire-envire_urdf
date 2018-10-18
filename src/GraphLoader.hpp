@@ -37,6 +37,7 @@ namespace envire
             
             virtual void loadJoints(const ::urdf::ModelInterface& urdfModel);
             
+            virtual bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
             
         private:            
             void initFrames(const ::urdf::ModelInterface& urdfModel);
