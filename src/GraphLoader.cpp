@@ -160,9 +160,8 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
 
 
 
-    bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value)
+bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value)
     {
-        
         std::map<std::string, ::urdf::JointSharedPtr>::const_iterator joint_it = urdfModel.joints_.find(jointName);
         if (joint_it == urdfModel.joints_.end()){
             printf("Joint %s not found in model\n",jointName.c_str());
@@ -188,12 +187,6 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
             case ::urdf::Joint::PLANAR:
             case ::urdf::Joint::FIXED: printf("Joint type not supported for setting values\n",jointName.c_str()); return false; break;
         }
-
-            // Eigen::Affine3d tfPose(Eigen::Affine3d::Identity());
-            // ::urdf::Vector3 pos = tf.second->parent_to_joint_origin_transform.position;
-            // ::urdf::Rotation rot = tf.second->parent_to_joint_origin_transform.rotation;
-            // tfPose.linear() = Eigen::Quaterniond(rot.w, rot.x, rot.y, rot.z).matrix();
-            // tfPose.translation() = Eigen::Vector3d(pos.x, pos.y, pos.z);
-            // envire::core::Transform envireTf(base::Time::now(), base::TransformWithCovariance(tfPose));
-            // graph->addTransform(tf.second->parent_link_name, tf.second->child_link_name, envireTf);
+        //should not reach this
+        return false;
     }
