@@ -44,7 +44,7 @@ namespace envire
              * @param urdfModel the already loaded model
              * @param filename to prefix to the mesh paths inside the visuals of the model
              */
-            void loadVisuals(const ::urdf::ModelInterface& urdfModel, const std::string& modelFilename = "");
+            virtual void loadVisuals(const ::urdf::ModelInterface& urdfModel, const std::string& modelFilename = "");
             
         private:            
             void initFrames(const ::urdf::ModelInterface& urdfModel);
