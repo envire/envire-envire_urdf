@@ -113,4 +113,6 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
             case ::urdf::Joint::PLANAR:
             case ::urdf::Joint::FIXED: printf("Joint type not supported for setting values\n",jointName.c_str()); return false; break;
         }
+        //should not reach this
+        return false;
     }
