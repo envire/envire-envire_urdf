@@ -46,7 +46,7 @@ namespace envire
              */
             void loadVisuals(const ::urdf::ModelInterface& urdfModel, const std::string& modelFilename = "");
 
-            bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
+            virtual bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
             
         private:            
             void initFrames(const ::urdf::ModelInterface& urdfModel);
