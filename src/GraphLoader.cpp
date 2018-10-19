@@ -166,7 +166,7 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
             case ::urdf::Joint::FIXED:
-                printf("Joint type not supported for setting values\n",jointName.c_str());
+                printf("Joint type not supported for setting values of %s\n",jointName.c_str());
                 return false;
         }
     }
