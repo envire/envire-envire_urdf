@@ -146,7 +146,8 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
         }
         ::urdf::JointConstSharedPtr joint = joint_it->second;
         switch(joint->type){
-            case ::urdf::Joint::REVOLUTE:{
+            case ::urdf::Joint::REVOLUTE:
+            {
                 Eigen::Vector3d axis (joint->axis.x,joint->axis.y,joint->axis.z);
                 Eigen::AngleAxisd angleaxis (value,axis);
 
@@ -156,14 +157,14 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
                 graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
 
                 return true;
-                }
+            }
             case ::urdf::Joint::UNKNOWN:
             case ::urdf::Joint::CONTINUOUS:
             case ::urdf::Joint::PRISMATIC:
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
-            case ::urdf::Joint::FIXED: printf("Joint type not supported for setting values\n",jointName.c_str()); return false; break;
+            case ::urdf::Joint::FIXED:
+                printf("Joint type not supported for setting values of %s\n",jointName.c_str());
+                return false;
         }
-        //should not reach this
-        return false;
     }
