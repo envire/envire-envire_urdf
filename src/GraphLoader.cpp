@@ -146,20 +146,28 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
             return false;
         }
         ::urdf::JointConstSharedPtr joint = joint_it->second;
+
+        //create rpy quat
+        Eigen::Quaterniond origin;
+        double x,y,z,w;
+        joint->parent_to_joint_origin_transform.rotation.getQuaternion(x,y,z,w);
+        origin = Eigen::Quaterniond(w,x,y,z);
+
         switch(joint->type){
-            case ::urdf::Joint::REVOLUTE:{
+            case ::urdf::Joint::REVOLUTE:
+            case ::urdf::Joint::CONTINUOUS:
+            {
                 Eigen::Vector3d axis (joint->axis.x,joint->axis.y,joint->axis.z);
                 Eigen::AngleAxisd angleaxis (value,axis);
 
                 //get envire joint
                 envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
-                tf.transform.orientation = Eigen::Quaterniond(angleaxis);
+                tf.transform.orientation = origin * Eigen::Quaterniond(angleaxis);
                 graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
 
                 return true;
                 }
             case ::urdf::Joint::UNKNOWN:
-            case ::urdf::Joint::CONTINUOUS:
             case ::urdf::Joint::PRISMATIC:
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
