@@ -152,7 +152,8 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
         joint->parent_to_joint_origin_transform.rotation.getQuaternion(x,y,z,w);
         origin = Eigen::Quaterniond(w,x,y,z);
 
-        switch(joint->type){
+        switch(joint->type)
+        {
             case ::urdf::Joint::REVOLUTE:
             case ::urdf::Joint::CONTINUOUS:
             {
