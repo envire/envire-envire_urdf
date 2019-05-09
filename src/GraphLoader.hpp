@@ -37,6 +37,15 @@ namespace envire
             
             virtual void loadJoints(const ::urdf::ModelInterface& urdfModel);
             
+            /** 
+             * This method includes in the frames the visual objects that
+             * the simulator will display to
+             * 
+             * @param urdfModel the already loaded model
+             * @param filename to prefix to the mesh paths inside the visuals of the model
+             */
+            virtual void loadVisuals(const ::urdf::ModelInterface& urdfModel, const std::string& modelFilename = "");
+
             virtual bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
             
         private:            

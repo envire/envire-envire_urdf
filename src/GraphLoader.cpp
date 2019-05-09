@@ -1,6 +1,7 @@
 #include "GraphLoader.hpp"
 #include <iostream>
 #include <urdf_model/link.h>
+#include <urdf_model/types.h>
 #include <envire_core/items/Item.hpp>
 #include <envire_core/graph/EnvireGraph.hpp>
 
@@ -83,8 +84,58 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
 }
 
 
+    void envire::urdf::GraphLoader::loadVisuals(const ::urdf::ModelInterface& urdfModel, const std::string& modelFilename)
+    {
+        using VisualsItemPtr = envire::core::Item<::urdf::Visual>::Ptr;
+        //std::vector<::smurf::Frame *> frames= urdfModel.getFrames(); //urdf:::Link
+        std::map<std::string, ::urdf::LinkSharedPtr> links = urdfModel.links_;
 
-
+        //for(::smurf::Frame* frame : links)
+        for(auto &link : links)
+        {
+            const std::vector<::urdf::VisualSharedPtr>& visuals = link.second->visual_array; //  std::vector<VisualSharedPtr>
+            //NOTE used to create unique frame names for the visuals
+            int visualNo = 0;
+            //int groupId = frame->getGroupId();
+            for(const ::urdf::VisualSharedPtr visual : visuals)
+            {
+                const base::Vector3d translation(visual->origin.position.x, visual->origin.position.y, visual->origin.position.z);
+                const base::Quaterniond rotation(visual->origin.rotation.w, visual->origin.rotation.x, visual->origin.rotation.y, visual->origin.rotation.z);            
+                VisualsItemPtr visual_itemPtr(new envire::core::Item<::urdf::Visual>(::urdf::Visual()));
+                    visual_itemPtr->getData().geometry = visual->geometry;
+                    visual_itemPtr->getData().material = visual->material;
+                    visual_itemPtr->getData().material_name = visual->material_name;
+                    visual_itemPtr->getData().name = visual->name;
+                    visual_itemPtr->getData().origin = visual->origin;
+                
+                //prefix local mesh paths with the urdf path
+                if (visual->geometry->type == ::urdf::Geometry::MESH){
+                    ::urdf::Mesh* mesh = dynamic_cast<::urdf::Mesh*>(visual->geometry.get());
+                    //remove all afer last "/" from modelFilename
+                    size_t found = modelFilename.find_last_of("/\\");
+                    mesh->filename = modelFilename.substr(0,found) + "/" +  mesh->filename;
+                }
+ 
+                //visual_itemPtr->getData().groupId = groupId;
+                //NOTE Checks if the offset is an identity transform. If yes, just add the collision to the existing frame otherwise, create a new transformation in the graph to encode the offset.
+                if(translation == base::Vector3d::Zero() && 
+                    (rotation.coeffs() == base::Quaterniond::Identity().coeffs() ||
+                    rotation.coeffs() == -base::Quaterniond::Identity().coeffs()))
+                {
+                    graph->addItemToFrame(link.first, visual_itemPtr);
+                }
+                else
+                {
+                    envire::core::Transform tf(translation, rotation);
+                    const envire::core::FrameId visualFrame(link.first + "_visual_" + boost::lexical_cast<envire::core::FrameId>(visualNo) );
+                    ++visualNo;
+                    graph->addTransform(link.first, visualFrame, tf);
+                    graph->addItemToFrame(visualFrame, visual_itemPtr);
+                }
+            }
+            //if (debug) LOG_DEBUG("[GraphLoader::loadVisuals] Added smurf::Visuals" );
+        }
+    }
 
 bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value)
     {
@@ -94,21 +145,29 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
             return false;
         }
         ::urdf::JointConstSharedPtr joint = joint_it->second;
+
+        //create rpy quat
+        Eigen::Quaterniond origin;
+        double x,y,z,w;
+        joint->parent_to_joint_origin_transform.rotation.getQuaternion(x,y,z,w);
+        origin = Eigen::Quaterniond(w,x,y,z);
+
         switch(joint->type)
         {
-            case ::urdf::Joint::REVOLUTE:{
+            case ::urdf::Joint::REVOLUTE:
+            case ::urdf::Joint::CONTINUOUS:
+            {
                 Eigen::Vector3d axis (joint->axis.x,joint->axis.y,joint->axis.z);
                 Eigen::AngleAxisd angleaxis (value,axis);
 
                 //get envire joint
                 envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
-                tf.transform.orientation = Eigen::Quaterniond(angleaxis);
+                tf.transform.orientation = origin * Eigen::Quaterniond(angleaxis);
                 graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
 
                 return true;
-                }
+            }
             case ::urdf::Joint::UNKNOWN:
-            case ::urdf::Joint::CONTINUOUS:
             case ::urdf::Joint::PRISMATIC:
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
@@ -116,6 +175,4 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
                 printf("Joint type not supported for setting values of %s\n",jointName.c_str());
                 return false;
         }
-        //should not reach this
-        return false;
     }
