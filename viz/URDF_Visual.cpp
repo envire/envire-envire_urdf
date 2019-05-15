@@ -1,6 +1,7 @@
 #include <iostream>
 #include <osgDB/ReadFile>
 #include <osg/ShapeDrawable>
+#include <osg/Material>
 #include "URDF_Visual.hpp"
 
 using namespace vizkit3d;
@@ -35,12 +36,20 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
     // Update the main node using the data in p->data
     if (mainNode->getNumChildren() == 0){
 
+        //read color
+        ::urdf::MaterialSharedPtr material = p->data.material;
+        //looks like the parser already sets the color.
+        osg::Vec4 color(material->color.r,material->color.g,material->color.b,material->color.a);
+        //TODO: load texture
+
+
         switch (p->data.geometry->type){
             case ::urdf::Geometry::SPHERE:{
                     ::urdf::Sphere* sphere = dynamic_cast<::urdf::Sphere*>(p->data.geometry.get());
                     osg::ref_ptr<osg::Sphere> shape = new osg::Sphere(osg::Vec3(0,0,0),sphere->radius);
                     osg::ref_ptr<osg::ShapeDrawable> drawable = new osg::ShapeDrawable(shape);
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
+                    drawable->setColor(color);
                     geode->addDrawable(drawable);
                     mainNode->addChild(geode);
                     break;
@@ -50,15 +59,17 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                     osg::ref_ptr<osg::Box> shape = new osg::Box(osg::Vec3(0,0,0),box->dim.x,box->dim.y,box->dim.z);
                     osg::ref_ptr<osg::ShapeDrawable> drawable = new osg::ShapeDrawable(shape);
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
+                    drawable->setColor(color);
                     geode->addDrawable(drawable);
                     mainNode->addChild(geode);
                     break;
                 }
             case ::urdf::Geometry::CYLINDER:{
                     ::urdf::Cylinder* cylinder = dynamic_cast<::urdf::Cylinder*>(p->data.geometry.get());
-                    osg::ref_ptr<osg::Cylinder> shape = new osg::Cylinder(osg::Vec3(0,0,0),cylinder->length,cylinder->radius);
+                    osg::ref_ptr<osg::Cylinder> shape = new osg::Cylinder(osg::Vec3(0,0,0),cylinder->radius,cylinder->length);
                     osg::ref_ptr<osg::ShapeDrawable> drawable = new osg::ShapeDrawable(shape);
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
+                    drawable->setColor(color);
                     geode->addDrawable(drawable);
                     mainNode->addChild(geode);
                     break;
@@ -68,17 +79,17 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                 std::cout << "loading mesh for " << p->data.name << " : " << mesh->filename << std::endl;
 
                 osg::ref_ptr<osg::Node> visual = osgDB::readNodeFile(mesh->filename);
-                //osg::ref_ptr<osg::Node> visual = osgDB::readNodeFile("./sherpa_tt-master/meshes/steeringPivot.obj");
-                //osgDB::readNodeFile("./cow.osg");
+                osg::ref_ptr<osg::Material> mat = new osg::Material;
+                mat->setDiffuse (osg::Material::FRONT_AND_BACK, color); 
+                visual->getOrCreateStateSet()->setAttributeAndModes(mat, osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE); 
 
-                
                 osg::ref_ptr<osg::PositionAttitudeTransform> transform = new osg::PositionAttitudeTransform();
                 mainNode->addChild(transform);
                 transform->setScale(osg::Vec3d (mesh->scale.x, mesh->scale.y, mesh->scale.z));
                 transform->addChild(visual);
 
                 break;
-            } 
+            }
         }
     }
 }
@@ -86,27 +97,6 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
 void URDF_Visual::updateDataIntern(::urdf::Visual const& value)
 {
     p->data = value;
-    
-
-//     Pose origin;
-//     GeometrySharedPtr geometry;
-
-//     std::string material_name;
-//     MaterialSharedPtr material;
-
-//     void clear()
-//     {
-//         origin.clear();
-//         material_name.clear();
-//         material.reset();
-//         geometry.reset();
-//         name.clear();
-//     };
-
-//   std::string name;
-
-    //mainNode = osgDB::readNodeFile(path);
-
 }
 
 //Macro that makes this plugin loadable in ruby, this is optional.
