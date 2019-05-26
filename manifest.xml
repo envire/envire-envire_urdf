@@ -2,7 +2,7 @@
   <description brief="Provides the tools to load a robot from a model into an envire representation.">
   The model of the robot that is stored as URDF can be uploaded to a envireTransformationGraph with this tool. The components of the robot are localized as nodes o graph incorporate their relative positions (transformations)
   </description>
-  <author>Sebastian Bliefert/Sebastian.Bliefert@dfki.defile:///home/spyrko/Dokumente/entern/urdf/envire/envire_smurf/src/</author>
+  <author>Sebastian Bliefert/Sebastian.Bliefert@dfki.de</author>
   <license></license>
   <url>http://</url>
   <logo>http://</logo>
