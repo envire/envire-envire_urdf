@@ -38,11 +38,13 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
 
         //read color
         ::urdf::MaterialSharedPtr material = p->data.material;
-        //looks like the parser already sets the color.
-        osg::Vec4 color(material->color.r,material->color.g,material->color.b,material->color.a);
-        //TODO: load texture
-
-
+        //use grey as default color
+        osg::Vec4 color(0.2,0.2,0.2,1);
+        if (material.get()){
+            //looks like the parser already sets the color.
+            color = osg::Vec4 (material->color.r,material->color.g,material->color.b,material->color.a);
+            //TODO: load texture
+        }
         switch (p->data.geometry->type){
             case ::urdf::Geometry::SPHERE:{
                     ::urdf::Sphere* sphere = dynamic_cast<::urdf::Sphere*>(p->data.geometry.get());
@@ -81,13 +83,14 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                 osg::ref_ptr<osg::Node> visual = osgDB::readNodeFile(mesh->filename);
                 osg::ref_ptr<osg::Material> mat = new osg::Material;
                 mat->setDiffuse (osg::Material::FRONT_AND_BACK, color); 
-                visual->getOrCreateStateSet()->setAttributeAndModes(mat, osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE); 
 
                 osg::ref_ptr<osg::PositionAttitudeTransform> transform = new osg::PositionAttitudeTransform();
                 mainNode->addChild(transform);
                 transform->setScale(osg::Vec3d (mesh->scale.x, mesh->scale.y, mesh->scale.z));
-                transform->addChild(visual);
-
+                if (visual){
+                    visual->getOrCreateStateSet()->setAttributeAndModes(mat, osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE); 
+                    transform->addChild(visual);
+                }
                 break;
             }
         }
