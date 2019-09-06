@@ -175,4 +175,5 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
                 printf("Joint type not supported for setting values of %s\n",jointName.c_str());
                 return false;
         }
+        return false;
     }
