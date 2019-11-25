@@ -177,8 +177,13 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
 
                 return true;
             }
+            case ::urdf::Joint::PRISMATIC: {
+                envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
+                tf.transform.translation[1] = joint->parent_to_joint_origin_transform.position.y - value;
+                graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
+                return true;
+            }
             case ::urdf::Joint::UNKNOWN:
-            case ::urdf::Joint::PRISMATIC:
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
             case ::urdf::Joint::FIXED:
