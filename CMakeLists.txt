@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 2.6)
 set(ROCK_USE_CXX11 TRUE)
 find_package(Rock)
-include(PluginManager)
+find_package(PluginManager)
 
 set(ROCK_TEST_ENABLED ON)
 rock_init(envire_urdf 0.1)
