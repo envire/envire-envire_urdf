@@ -11,5 +11,6 @@
   <depend package="envire/envire_urdf" />
   <depend package="control/urdfdom" />
   <depend package="control/urdfdom_headers" />
+  <depend package="tools/plugin_manager" />
 
 </package>
