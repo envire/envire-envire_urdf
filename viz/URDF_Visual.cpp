@@ -53,6 +53,7 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
                     drawable->setColor(color);
                     geode->addDrawable(drawable);
+                    geode->setName(p->data.name);
                     mainNode->addChild(geode);
                     break;
                 }
@@ -63,6 +64,7 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
                     drawable->setColor(color);
                     geode->addDrawable(drawable);
+                    geode->setName(p->data.name);
                     mainNode->addChild(geode);
                     break;
                 }
@@ -73,6 +75,7 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
                     drawable->setColor(color);
                     geode->addDrawable(drawable);
+                    geode->setName(p->data.name);
                     mainNode->addChild(geode);
                     break;
             }
@@ -88,6 +91,7 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
                 mainNode->addChild(transform);
                 transform->setScale(osg::Vec3d (mesh->scale.x, mesh->scale.y, mesh->scale.z));
                 if (visual){
+                    visual->setName(p->data.name);
                     visual->getOrCreateStateSet()->setAttributeAndModes(mat, osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE); 
                     transform->addChild(visual);
                 }
