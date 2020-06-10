@@ -48,10 +48,18 @@ namespace envire
 
             virtual bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
             
+            virtual void addURIPath(const std::string& uri, const std::string& path){
+                printf("set uri path urdf %s:%s\n",uri.c_str(), path.c_str());
+                uriPaths[uri] = path;
+            }
+
+
         private:            
             void initFrames(const ::urdf::ModelInterface& urdfModel);
             
-            void initTfs(const ::urdf::ModelInterface& urdfModel);            
+            void initTfs(const ::urdf::ModelInterface& urdfModel);
+
+            std::map<std::string, std::string> uriPaths;   
         };
     }
 }
