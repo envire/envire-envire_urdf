@@ -81,8 +81,6 @@ void URDF_Visual::updateMainNode ( osg::Node* node )
             }
             case ::urdf::Geometry::MESH:{
                 ::urdf::Mesh* mesh = dynamic_cast<::urdf::Mesh*>(p->data.geometry.get());
-                std::cout << "loading mesh for " << p->data.name << " : " << mesh->filename << std::endl;
-
                 osg::ref_ptr<osg::Node> visual = osgDB::readNodeFile(mesh->filename);
                 osg::ref_ptr<osg::Material> mat = new osg::Material;
                 mat->setDiffuse (osg::Material::FRONT_AND_BACK, color); 
