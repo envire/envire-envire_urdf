@@ -115,7 +115,10 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                         //filename starts with package://
                         //just remove it
                         mesh->filename.erase(0,10);
-                        mesh->filename = uriPaths["package://"] + mesh->filename;
+                        mesh->filename = uriPaths["package://"] + "/" + mesh->filename;
+
+                        printf ("\n loading %s \n",mesh->filename.c_str());
+
                     }else{
                         //remove all afer last "/" from modelFilename
                         size_t found = modelFilename.find_last_of("/\\");
