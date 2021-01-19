@@ -37,6 +37,10 @@ namespace envire
             
             virtual void loadJoints(const ::urdf::ModelInterface& urdfModel);
             
+            virtual void setFramePrefix(const std::string & prefix){
+                framePrefix = prefix;
+            }
+
             /** 
              * This method includes in the frames the visual objects that
              * the simulator will display to
@@ -55,6 +59,8 @@ namespace envire
 
 
         private:            
+
+            std::string framePrefix;
             void initFrames(const ::urdf::ModelInterface& urdfModel);
             
             void initTfs(const ::urdf::ModelInterface& urdfModel);
