@@ -13,6 +13,7 @@ namespace vizkit3d
         , boost::noncopyable
     {
     Q_OBJECT
+
     public:
         URDF_Visual();
         ~URDF_Visual();
@@ -30,5 +31,9 @@ namespace vizkit3d
         Data* p;
         osg::ref_ptr<osg::Group> mainNode;
     };
+
+    //Macro that makes this plugin loadable in ruby, this is optional.
+    VizkitQtPlugin(URDF_Visual)
+
 }
 #endif

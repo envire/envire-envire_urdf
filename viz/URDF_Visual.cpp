@@ -109,6 +109,3 @@ void URDF_Visual::updateDataIntern(::urdf::Visual const& value)
     p->data = value;
 }
 
-//Macro that makes this plugin loadable in ruby, this is optional.
-VizkitQtPlugin(URDF_Visual)
-

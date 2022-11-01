@@ -97,7 +97,7 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
             //NOTE used to create unique frame names for the visuals
             int visualNo = 0;
             //int groupId = frame->getGroupId();
-            for(const ::urdf::VisualSharedPtr visual : visuals)
+            for(const ::urdf::VisualSharedPtr &visual : visuals)
             {
                 const base::Vector3d translation(visual->origin.position.x, visual->origin.position.y, visual->origin.position.z);
                 const base::Quaterniond rotation(visual->origin.rotation.w, visual->origin.rotation.x, visual->origin.rotation.y, visual->origin.rotation.z);            
