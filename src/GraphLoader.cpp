@@ -144,6 +144,7 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                     graph->addTransform(framePrefix + link.first, framePrefix + visualFrame, tf);
                     graph->addItemToFrame(framePrefix + visualFrame, visual_itemPtr);
                 }
+                visualItemUuids.push_back(visual_itemPtr->getID());
             }
             //if (debug) LOG_DEBUG("[GraphLoader::loadVisuals] Added smurf::Visuals" );
         }

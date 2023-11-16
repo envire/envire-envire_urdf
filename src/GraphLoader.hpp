@@ -57,15 +57,19 @@ namespace envire
                 uriPaths[uri] = path;
             }
 
+            std::vector<boost::uuids::uuid> getVisualItemIds() {
+                return visualItemUuids;
+            }
 
-        private:            
-
+        private:
             std::string framePrefix;
             void initFrames(const ::urdf::ModelInterface& urdfModel);
-            
+
             void initTfs(const ::urdf::ModelInterface& urdfModel);
 
-            std::map<std::string, std::string> uriPaths;   
+            std::map<std::string, std::string> uriPaths;
+
+            std::vector<boost::uuids::uuid> visualItemUuids;
         };
     }
 }
