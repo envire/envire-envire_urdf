@@ -8,4 +8,5 @@ find_package(PluginManager)
 
 set(ROCK_TEST_ENABLED ON)
 rock_init()
+rock_feature(NOCURDIR)
 rock_standard_layout()
