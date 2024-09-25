@@ -30,5 +30,7 @@ namespace vizkit3d
         Data* p;
         osg::ref_ptr<osg::Group> mainNode;
     };
+
+    VizkitQtPluginHeaderDecls( URDF_Visual )
 }
 #endif

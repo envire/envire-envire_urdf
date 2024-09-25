@@ -109,6 +109,7 @@ void URDF_Visual::updateDataIntern(::urdf::Visual const& value)
 
 }
 
-//Macro that makes this plugin loadable in ruby, this is optional.
-VizkitQtPlugin(URDF_Visual)
-
+namespace vizkit3d
+{
+    VizkitQtPluginImpl( URDF_Visual )
+}
