@@ -37,6 +37,10 @@ namespace envire
             
             virtual void loadJoints(const ::urdf::ModelInterface& urdfModel);
             
+            virtual void setFramePrefix(const std::string & prefix){
+                framePrefix = prefix;
+            }
+
             /** 
              * This method includes in the frames the visual objects that
              * the simulator will display to
@@ -48,10 +52,24 @@ namespace envire
 
             virtual bool setJointValue(const ::urdf::ModelInterface& urdfModel, const std::string &jointName, const float &value);
             
-        private:            
+            virtual void addURIPath(const std::string& uri, const std::string& path){
+                printf("set uri path urdf %s:%s\n",uri.c_str(), path.c_str());
+                uriPaths[uri] = path;
+            }
+
+            std::vector<boost::uuids::uuid> getVisualItemIds() {
+                return visualItemUuids;
+            }
+
+        private:
+            std::string framePrefix;
             void initFrames(const ::urdf::ModelInterface& urdfModel);
-            
-            void initTfs(const ::urdf::ModelInterface& urdfModel);            
+
+            void initTfs(const ::urdf::ModelInterface& urdfModel);
+
+            std::map<std::string, std::string> uriPaths;
+
+            std::vector<boost::uuids::uuid> visualItemUuids;
         };
     }
 }

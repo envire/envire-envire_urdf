@@ -19,7 +19,7 @@ void envire::urdf::GraphLoader::loadStructure(envire::core::GraphTraits::vertex_
     {
         loadStructure(urdfModel);
     }
-    envire::core::FrameId robotRoot = urdfModel.getRoot()->name;
+    envire::core::FrameId robotRoot = framePrefix + urdfModel.getRoot()->name;
     iniPose.time = base::Time::now();
     graph->addTransform(graph->getFrameId(linkTo), robotRoot, iniPose);
 }
@@ -28,7 +28,7 @@ void envire::urdf::GraphLoader::initFrames(const ::urdf::ModelInterface& urdfMod
 {
     for(std::pair<std::string, ::urdf::LinkSharedPtr > frame : urdfModel.links_)
     {
-       graph->addFrame(frame.second->name);
+       graph->addFrame(framePrefix + frame.second->name);
     }
 
 }
@@ -43,7 +43,7 @@ void envire::urdf::GraphLoader::initTfs(const ::urdf::ModelInterface& urdfModel)
         tfPose.linear() = Eigen::Quaterniond(rot.w, rot.x, rot.y, rot.z).matrix();
         tfPose.translation() = Eigen::Vector3d(pos.x, pos.y, pos.z);
         envire::core::Transform envireTf(base::Time::now(), base::TransformWithCovariance(tfPose));
-        graph->addTransform(tf.second->parent_link_name, tf.second->child_link_name, envireTf);
+        graph->addTransform(framePrefix + tf.second->parent_link_name, framePrefix + tf.second->child_link_name, envireTf);
     }
 }
 
@@ -62,7 +62,7 @@ void envire::urdf::GraphLoader::loadFrames(const ::urdf::ModelInterface& urdfMod
     for(std::pair<std::string, ::urdf::LinkSharedPtr > frame : urdfModel.links_)
     {
         linkItemPtr link_itemPtr (new  envire::core::Item<::urdf::Link>(*(frame.second)));
-        envire::core::FrameId frameId = frame.second->name;
+        envire::core::FrameId frameId = framePrefix + frame.second->name;
         graph->addItemToFrame(frameId, link_itemPtr);
     }
     framesLoaded = true;
@@ -78,7 +78,7 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
     for(std::pair<std::string, ::urdf::JointSharedPtr > tf : urdfModel.joints_)
     {
         jointItemPtr joint_itemPtr (new envire::core::Item<::urdf::Joint>(*(tf.second)));
-        envire::core::FrameId sourceId = tf.second->parent_link_name;
+        envire::core::FrameId sourceId = framePrefix + tf.second->parent_link_name;
         graph->addItemToFrame(sourceId, joint_itemPtr);
     }
 }
@@ -111,9 +111,21 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                 //prefix local mesh paths with the urdf path
                 if (visual->geometry->type == ::urdf::Geometry::MESH){
                     ::urdf::Mesh* mesh = dynamic_cast<::urdf::Mesh*>(visual->geometry.get());
-                    //remove all afer last "/" from modelFilename
-                    size_t found = modelFilename.find_last_of("/\\");
-                    mesh->filename = modelFilename.substr(0,found) + "/" +  mesh->filename;
+                    if (mesh->filename.rfind("package://", 0) == 0) {
+                        //filename starts with package://
+                        //just remove it
+                        mesh->filename.erase(0,10);
+                        mesh->filename = uriPaths["package://"] + "/" + mesh->filename;
+
+                        // printf ("\n loading %s \n",mesh->filename.c_str());
+
+                    }else{
+                        //remove all afer last "/" from modelFilename
+                        size_t found = modelFilename.find_last_of("/\\");
+                        mesh->filename = modelFilename.substr(0,found) + "/" +  mesh->filename;
+                        //printf("2-2: %s\n,",mesh->filename.c_str());
+                    }
+                    
                 }
  
                 //visual_itemPtr->getData().groupId = groupId;
@@ -122,16 +134,17 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                     (rotation.coeffs() == base::Quaterniond::Identity().coeffs() ||
                     rotation.coeffs() == -base::Quaterniond::Identity().coeffs()))
                 {
-                    graph->addItemToFrame(link.first, visual_itemPtr);
+                    graph->addItemToFrame(framePrefix + link.first, visual_itemPtr);
                 }
                 else
                 {
                     envire::core::Transform tf(translation, rotation);
-                    const envire::core::FrameId visualFrame(link.first + "_visual_" + boost::lexical_cast<envire::core::FrameId>(visualNo) );
+                    const envire::core::FrameId visualFrame(framePrefix + link.first + "_visual_" + boost::lexical_cast<envire::core::FrameId>(visualNo) );
                     ++visualNo;
-                    graph->addTransform(link.first, visualFrame, tf);
-                    graph->addItemToFrame(visualFrame, visual_itemPtr);
+                    graph->addTransform(framePrefix + link.first, framePrefix + visualFrame, tf);
+                    graph->addItemToFrame(framePrefix + visualFrame, visual_itemPtr);
                 }
+                visualItemUuids.push_back(visual_itemPtr->getID());
             }
             //if (debug) LOG_DEBUG("[GraphLoader::loadVisuals] Added smurf::Visuals" );
         }
@@ -161,18 +174,24 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
                 Eigen::AngleAxisd angleaxis (value,axis);
 
                 //get envire joint
-                envire::core::Transform tf = graph->getTransform(joint->parent_link_name,joint->child_link_name);
+                envire::core::Transform tf = graph->getTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name);
                 tf.transform.orientation = origin * Eigen::Quaterniond(angleaxis);
-                graph->updateTransform(joint->parent_link_name,joint->child_link_name,tf);
+                graph->updateTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name,tf);
 
                 return true;
             }
+            case ::urdf::Joint::PRISMATIC: {
+                envire::core::Transform tf = graph->getTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name);
+                tf.transform.translation[1] = joint->parent_to_joint_origin_transform.position.y - value;
+                graph->updateTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name,tf);
+                return true;
+            }
             case ::urdf::Joint::UNKNOWN:
-            case ::urdf::Joint::PRISMATIC:
             case ::urdf::Joint::FLOATING:
             case ::urdf::Joint::PLANAR:
             case ::urdf::Joint::FIXED:
                 printf("Joint type not supported for setting values of %s\n",jointName.c_str());
                 return false;
         }
+        return false;
     }
