@@ -30,7 +30,7 @@ namespace vizkit3d
         Data* p;
         osg::ref_ptr<osg::Group> mainNode;
     };
-#if QT_VERSION < 0x050000
+#if QT_VERSION >= 0x050000
     VizkitQtPluginHeaderDecls( URDF_Visual )
 #endif
 }
