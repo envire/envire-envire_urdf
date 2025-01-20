@@ -5,9 +5,8 @@ project(envire_urdf VERSION 0.1)
 
 find_package(Rock)
 find_package(PluginManager)
+find_package(Boost REQUIRED COMPONENTS system thread)
 
-set(ROCK_TEST_ENABLED ON)
 rock_init()
-find_package(Boost REQUIRED system thread)
 rock_feature(NOCURDIR)
 rock_standard_layout()
