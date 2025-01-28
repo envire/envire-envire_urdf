@@ -114,4 +114,6 @@ void URDF_Visual::updateDataIntern(::urdf::Visual const& value)
 #if QT_VERSION < 0x050000
     VizkitQtPlugin(URDF_Visual)
 #endif
-
+#if QT_VERSION >= 0x050000
+    VizkitQtPluginImpl( URDF_Visual )
+#endif
