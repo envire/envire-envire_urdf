@@ -111,21 +111,24 @@ void envire::urdf::GraphLoader::loadJoints(const ::urdf::ModelInterface& urdfMod
                 //prefix local mesh paths with the urdf path
                 if (visual->geometry->type == ::urdf::Geometry::MESH){
                     ::urdf::Mesh* mesh = dynamic_cast<::urdf::Mesh*>(visual->geometry.get());
-                    if (mesh->filename.rfind("package://", 0) == 0) {
-                        //filename starts with package://
-                        //just remove it
-                        mesh->filename.erase(0,10);
-                        mesh->filename = uriPaths["package://"] + "/" + mesh->filename;
+                    bool replaced = false;
+                    for (const auto& uri : uriPaths) {
+                        // if path starts with uri, replace uri part e.g. file:// with . or
+                        if (mesh->filename.rfind(uri.first, 0) == 0) {
+                            mesh->filename.erase(0, uri.first.size());
+                            mesh->filename = uri.second + "/" + mesh->filename;
+                            // printf ("\n loading new %s \n",mesh->filename.c_str());
+                            replaced=true;
+                            break;
+                        }
+                    }
 
-                        // printf ("\n loading %s \n",mesh->filename.c_str());
-
-                    }else{
+                    if (!replaced) {
                         //remove all afer last "/" from modelFilename
                         size_t found = modelFilename.find_last_of("/\\");
                         mesh->filename = modelFilename.substr(0,found) + "/" +  mesh->filename;
                         //printf("2-2: %s\n,",mesh->filename.c_str());
                     }
-                    
                 }
  
                 //visual_itemPtr->getData().groupId = groupId;
