@@ -185,7 +185,7 @@ bool envire::urdf::GraphLoader::setJointValue(const ::urdf::ModelInterface& urdf
             }
             case ::urdf::Joint::PRISMATIC: {
                 envire::core::Transform tf = graph->getTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name);
-                tf.transform.translation[1] = joint->parent_to_joint_origin_transform.position.y - value;
+                tf.transform.translation[2] = joint->parent_to_joint_origin_transform.position.y - value;
                 graph->updateTransform(framePrefix + joint->parent_link_name,framePrefix + joint->child_link_name,tf);
                 return true;
             }
